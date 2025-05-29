@@ -24,8 +24,9 @@ app.post(
   upload.fields([
     { name: 'audio' },
     { name: 'subs' },
-    { name: 'background', maxCount: 1 }, // optional background image
-    { name: 'fontFile', maxCount: 1 }, // optional font file
+    { name: 'background', maxCount: 1 },
+    { name: 'fontFile', maxCount: 1 },
+    { name: 'fontName', maxCount: 1 },
   ]),
   async (req, res) => {
     try {
@@ -33,6 +34,7 @@ app.post(
       const srt = req.files['subs'][0];
       const bgImage = req.files['background']?.[0];
       const fontFile = req.files['fontFile']?.[0];
+      const fontName = req.body.fontName || (fontFile ? path.parse(fontFile.originalname).name : 'Arial');
 
       const tempDir = path.join(__dirname, 'tmp');
       if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
@@ -65,8 +67,6 @@ app.post(
 
       cmd.input(audioPath);
       cmd.input(srtPath);
-
-      const fontName = fontFile ? path.parse(fontFile.originalname).name : 'Arial';
 
       cmd
         .videoCodec('libx264')
