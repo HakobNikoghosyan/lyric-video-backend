@@ -8,6 +8,16 @@ const app = express();
 const upload = multer();
 const PORT = process.env.PORT || 3000;
 const cors = require('cors');
+const getAudioDuration = (filePath) =>
+  new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(filePath, (err, metadata) => {
+      if (err) return reject(err);
+      const duration = metadata.format.duration;
+      resolve(duration);
+    });
+  });
+const duration = await getAudioDuration(audioPath);
+
 app.use(cors());
 app.post('/render', upload.fields([{ name: 'audio' }, { name: 'subs' }]), (req, res) => {
     const audio = req.files['audio'][0];
@@ -25,7 +35,7 @@ app.post('/render', upload.fields([{ name: 'audio' }, { name: 'subs' }]), (req, 
     fs.writeFileSync(srtPath, srt.buffer);
 
     ffmpeg()
-        .input('color=black:s=1280x720:d=30')
+        .input(`color=black:s=1280x720:d=${duration}`)
         .inputOptions('-f', 'lavfi')
         .input(audioPath)
         .input(srtPath)
