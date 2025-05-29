@@ -1,0 +1,14 @@
+{
+  "build": {
+    "env": {
+      "DEBIAN_FRONTEND": "noninteractive"
+    },
+    "commands": [
+      "apt-get update && apt-get install -y ffmpeg",
+      "npm install"
+    ]
+  },
+  "start": {
+    "cmd": "node server.js"
+  }
+}
