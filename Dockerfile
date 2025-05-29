@@ -1,17 +1,16 @@
 FROM node:18
 
 # Install ffmpeg
-RUN apt-get update && \
-    apt-get install -y ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg
 
-# Create app directory
+# Set working directory
 WORKDIR /app
 
-# Copy files
+# Copy all files
 COPY . .
 
-# Install dependencies
+# Install deps
 RUN npm install
 
-# Start the server
+# Start the app
 CMD ["node", "server.js"]
