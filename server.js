@@ -7,7 +7,8 @@ const ffmpeg = require('fluent-ffmpeg');
 const app = express();
 const upload = multer();
 const PORT = process.env.PORT || 3000;
-
+const cors = require('cors');
+app.use(cors());
 app.post('/render', upload.fields([{ name: 'audio' }, { name: 'subs' }]), (req, res) => {
     const audio = req.files['audio'][0];
     const srt = req.files['subs'][0];
