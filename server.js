@@ -60,7 +60,9 @@ app.post(
       const cmd = ffmpeg();
 
       if (bgPath) {
-        cmd.input(bgPath).loop(duration);
+        cmd.input(bgPath)
+          .loop()
+          .inputOptions(['-framerate', '1', '-t', String(duration)]);
       } else {
         cmd.input(`color=black:s=1280x720:d=${duration}`).inputOptions('-f', 'lavfi');
       }
