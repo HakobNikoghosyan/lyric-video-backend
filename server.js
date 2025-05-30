@@ -62,7 +62,7 @@ app.post(
       if (bgPath) {
         cmd.input(bgPath)
           .inputOptions('-loop', '1')
-          .inputFormat('image2');
+          .inputOptions('-framerate', '30');
       } else {
         cmd.input(`color=black:s=1280x720:d=${duration}`).inputOptions(['-f', 'lavfi']);
       }
@@ -81,7 +81,6 @@ app.post(
         .complexFilter(
           `subtitles=${srtPath}:fontsdir=${path.join(__dirname, 'fonts')}:force_style='FontName=${fontName},FontSize=40'`
         )
-        .size('1280x720')
         .save(outPath)
         .on('end', () => {
           res.download(outPath, 'lyric-video.mp4', () => {
