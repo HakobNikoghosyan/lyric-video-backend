@@ -61,11 +61,13 @@ app.post(
 
       if (bgPath) {
         cmd.input(bgPath)
-          .inputOptions('-loop', '1')
-          .inputOptions('-framerate', '25')
-          .inputOptions('-t', String(duration));
+          .inputOptions([
+            '-loop', '1',
+            '-t', `${duration}`,
+            '-framerate', '25'
+          ]);
       } else {
-        cmd.input(`color=black:s=1280x720:d=${duration}`).inputOptions('-f', 'lavfi');
+        cmd.input(`color=black:s=1280x720:d=${duration}`).inputOptions(['-f', 'lavfi']);
       }
 
       cmd.input(audioPath);
