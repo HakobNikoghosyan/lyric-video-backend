@@ -61,14 +61,20 @@ app.post(
 
       if (bgPath) {
         cmd.input(bgPath)
-          .inputOptions('-loop', '1')
-          .inputOptions('-framerate', '30');
+          .inputOptions(['-loop', '1'])
+          .inputFormat('image2');
       } else {
         cmd.input(`color=black:s=1280x720:d=${duration}`).inputOptions(['-f', 'lavfi']);
       }
 
       cmd.input(audioPath);
       cmd.input(srtPath);
+
+      const fontsDirPath = path.join(__dirname, 'fonts');
+
+      const filters = bgPath
+        ? `scale=1280:720,subtitles='${srtPath}':fontsdir='${fontsDirPath}':force_style='FontName=${fontName},FontSize=40'`
+        : `subtitles='${srtPath}':fontsdir='${fontsDirPath}':force_style='FontName=${fontName},FontSize=40'`;
 
       cmd
         .videoCodec('libx264')
@@ -78,9 +84,7 @@ app.post(
           '-pix_fmt', 'yuv420p',
           `-t`, `${duration}`
         ])
-        .complexFilter(
-          `subtitles=${srtPath}:fontsdir=${path.join(__dirname, 'fonts')}:force_style='FontName=${fontName},FontSize=40'`
-        )
+        .complexFilter(filters)
         .save(outPath)
         .on('end', () => {
           res.download(outPath, 'lyric-video.mp4', () => {
