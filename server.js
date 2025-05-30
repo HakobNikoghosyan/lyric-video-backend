@@ -61,8 +61,9 @@ app.post(
 
       if (bgPath) {
         cmd.input(bgPath)
-          .loop()
-          .inputOptions(['-framerate', '1', '-t', String(duration)]);
+          .inputOptions('-loop', '1')
+          .inputOptions('-framerate', '25')
+          .inputOptions('-t', String(duration));
       } else {
         cmd.input(`color=black:s=1280x720:d=${duration}`).inputOptions('-f', 'lavfi');
       }
