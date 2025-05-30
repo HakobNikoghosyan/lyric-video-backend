@@ -61,10 +61,8 @@ app.post(
 
       if (bgPath) {
         cmd.input(bgPath)
-          .loop()
-          .inputOptions([
-            '-t', `${duration}`
-          ]);
+          .inputOptions('-loop', '1')
+          .inputOptions('-framerate', '30');
       } else {
         cmd.input(`color=black:s=1280x720:d=${duration}`).inputOptions(['-f', 'lavfi']);
       }
@@ -77,7 +75,8 @@ app.post(
         .outputOptions([
           '-preset', 'ultrafast',
           '-shortest',
-          '-pix_fmt', 'yuv420p'
+          '-pix_fmt', 'yuv420p',
+          `-t`, `${duration}`
         ])
         .complexFilter(
           `subtitles=${srtPath}:fontsdir=${path.join(__dirname, 'fonts')}:force_style='FontName=${fontName},FontSize=40'`
